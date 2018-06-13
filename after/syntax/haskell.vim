@@ -81,7 +81,11 @@ if s:extraConceal
     " Redfining to get proper '::' concealing
     syntax match hs_DeclareFunction /^[a-z_(]\S*\(\s\|\n\)*::/me=e-2 nextgroup=hsNiceOperator contains=hs_FunctionName,hs_OpFunctionName
 
-    syntax match hsNiceoperator "!!" conceal cchar=‼
+    "syntax match hsNiceoperator "!!" conceal cchar=‼
+    "syntax match ElemEx     contained "!" conceal cchar=‼
+    "syntax match ElemSpace  contained "!" conceal cchar= 
+    "syntax match hsNiceoperator "!!" contains=ElemEx,ElemSpace
+
     syntax match hsNiceoperator "++\ze[^+]" conceal cchar=⧺
     syntax match hsNiceOperator "\<forall\>" conceal cchar=∀
     syntax match hsNiceOperator "-<" conceal cchar=↢
@@ -151,22 +155,34 @@ endif
 
 " 'A' option to not try to preserve indentation.
 if Cf('A')
-    syntax match hsNiceOperator "<-" conceal cchar=←
-    syntax match hsNiceOperator "->" conceal cchar=→
-    syntax match hsNiceOperator "=>" conceal cchar=⇒
-    syntax match hsNiceOperator "\:\:" conceal cchar=∷
-else
-    syntax match hsLRArrowHead contained ">" conceal cchar= 
-    syntax match hsLRArrowTail contained "-" conceal cchar=→
-    syntax match hsLRArrowFull "->" contains=hsLRArrowHead,hsLRArrowTail
-
+    "syntax match hsNiceOperator "<-" conceal cchar=←
     syntax match hsRLArrowHead contained "<" conceal cchar=←
     syntax match hsRLArrowTail contained "-" conceal cchar= 
     syntax match hsRLArrowFull "<-" contains=hsRLArrowHead,hsRLArrowTail
 
+    "syntax match hsNiceOperator "->" conceal cchar=→
+    syntax match hsNiceOperator "=>" conceal cchar=⇒
+    syntax match hsNiceOperator "\:\:" conceal cchar=∷
+
+    syntax match hsLRArrowHead contained ">" conceal cchar= 
+    syntax match hsLRArrowTail contained "-" conceal cchar=→
+    syntax match hsLRArrowFull "->" contains=hsLRArrowHead,hsLRArrowTail
+else
+    syntax match hsLRArrowHead contained ">" conceal cchar= 
+    syntax match hsLRArrowTail contained "-" conceal cchar=→
+    "syntax match hsLRArrowFull "->" contains=hsLRArrowHead,hsLRArrowTail
+    syntax match hsLRArrowSpace contained " " conceal
+    syntax match hsLRArrowFull "-> " contains=hsLRArrowHead,hsLRArrowTail,hsLRArrowSpace
+
+    syntax match hsRLArrowHead contained "<" conceal cchar=←
+    syntax match hsRLArrowTail contained "-" conceal "cchar= 
+    syntax match hsRLArrowFull "<-" contains=hsRLArrowHead,hsRLArrowTail
+
     syntax match hsLRDArrowHead contained ">" conceal cchar= 
     syntax match hsLRDArrowTail contained "=" conceal cchar=⇒
-    syntax match hsLRDArrowFull "=>" contains=hsLRDArrowHead,hsLRDArrowTail
+    "syntax match hsLRDArrowFull "=> " contains=hsLRDArrowHead,hsLRDArrowTail
+    syntax match hsLRDArrowSpace contained " " conceal
+    syntax match hsLRDArrowFull "=> " contains=hsLRDArrowHead,hsLRDArrowTail,hsLRDArrowSpace
 endif
 
 " 's' option to disable space consumption after ∑,∏,√ and ¬ functions.
@@ -407,6 +423,11 @@ endif
 " 'C' option to disable Complex type to ℂ concealing
 if !Cf('C')
     syntax match hasNiceOperator "\<Complex\>" conceal cchar=ℂ
+endif
+
+" 'N' option to disable Natural type to ℕ concealing
+if !Cf('N')
+    syntax match hasNiceOperator "\<Natural\>" conceal cchar=ℕ
 endif
 
 " '1' option to disable numeric superscripts concealing, e.g. x².
